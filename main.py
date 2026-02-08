@@ -1,6 +1,7 @@
 from data_loader import load_csvfile, minutes_to_12hour
 from dfs_algo import build_optimal_schedules
 from conflicts import make_daysList
+from scoring import score_schedule
 
 def days_ofClass(section, allowed_days_set):
     # Returns True if the section only uses days from allowed_days_set
@@ -15,8 +16,8 @@ def days_ofClass(section, allowed_days_set):
 
 def print_schedule(schedule, rank):
     # Print a schedule in a clean, readable format using 12-hour time
-
-    print(f"\n=== Schedule #{rank} ===")
+    score = score_schedule(schedule)
+    print(f"\n=== Schedule #{rank} (score: {score}) ===")
     print("-" * 50)
     
     for sec in schedule:
@@ -79,7 +80,7 @@ def main():
     top_schedules = build_optimal_schedules(
         courses_to_sections=filtered_courses_to_sections,
         desired_courses=desired_courses,
-        max_results=5
+        max_results=10
     )
 
     if not top_schedules:

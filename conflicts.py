@@ -1,6 +1,4 @@
-# Helper functions: to check if two classes encounter a time conflict
-
-
+# Helper functions: Check if two classes encounter a time conflict
 # Turns the user entered strings like "MW" or "TuTh" into a list of days like ["M", "W"] or ["Tu", "Th"]
 def make_daysList(days_str):
 

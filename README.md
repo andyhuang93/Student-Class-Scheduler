@@ -1,4 +1,4 @@
-# Student Course Scheduler!
+# Student Course Scheduler
 
 This course scheduler was made for UMASS Boston students to help find and build optimal, non-time conflicting class schedules that best fit their semester!
 

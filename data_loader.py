@@ -3,22 +3,38 @@ import csv
 # Take strings like "930" and converts it into total minutes since midnight
 # For ex. "930" is (9 x 60) + 30 = 570 minutes
 def time_toMinutes(t):
+    t = t.strip().lower() 
 
-    t = t.strip()
+    is_pm = "pm" in t
+    is_am = "am" in t
+
     digits = ""
-    for time in t:
-        if time.isdigit():
-            digits += time
+    for char in t:
+        if char.isdigit() or char == ":":
+            digits += char
 
-    # Distinguishs which part is hours and minutes
-    # For ex. "930" -> len(digits) > 2,  last 2 digits = minutes
-    if len(digits) <= 2:
-        hour = int(digits)
-        minute = 0
-    else:
-        hour = int(digits[:-2])
-        minute = int(digits[-2:])
+    if ":" in digits:
+        parts = digits.split(":")
+        hour = int(parts[0])
+        minute = int(parts[1]) if len(parts) > 1 else 0
+    else: 
+        # Distinguishs which part is hours and minutes
+        # For ex. "930" -> len(digits) > 2,  last 2 digits = minutes
+        if len(digits) <= 2:
+            hour = int(digits)
+            minute = 0
+        else:
+            hour = int(digits[:-2])
+            minute = int(digits[-2:])
 
+    if is_pm and hour != 12:
+        hour += 12
+    elif is_am and hour == 12:
+        hour = 0
+    elif not is_am and not is_pm:
+        if 1 <= hour <= 7:
+            hour += 12
+            
     return (hour*60) + minute
 
 

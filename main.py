@@ -1,6 +1,6 @@
-from data_loader import load_csvfile, minutes_to_12hour
+from data_loader import load_csvfile, minutes_to_12hour, time_toMinutes
 from dfs_algo import build_optimal_schedules
-from conflicts import make_daysList
+from conflicts import make_daysList, conflicts_with_blocked_times
 from scoring import score_schedule
 
 def days_ofClass(section, allowed_days_set):
@@ -54,9 +54,9 @@ def main():
 
     # Get allowed days
     print("\nEnter allowed class days (M Tu W Th F - no spaces)")
-    print("Examples: MTWThF   MWF   TuTh")
+    print("Examples: MTuWThF   MWF   TuTh")
     print("Press Enter to allow any day")
-    raw_days = input(">>>>> ").strip().upper()
+    raw_days = input(">>>>> ").strip()
 
     if raw_days == "":
         allowed_days_set = None
@@ -66,12 +66,40 @@ def main():
         allowed_days_set = set(allowed_days_list)
         print(f"→ Only allowing classes on: {', '.join(sorted(allowed_days_set))}")
 
+    print("\nEnter times you want to avoid (OPTIONAL, press ENTER to skip)")
+    print("Examples: F 1pm-5pm (avoid Friday 1-5pm)")
+    print("For MW 4 - 5:15pm: M 4pm-5:15pm, -> press ENTER -> W 4pm-5:15pm")
+    print("Press ENTER when done")
+    blocked_times = []
+
+    while True:
+        block_input = input(">>>>> ").strip()
+        if not block_input:
+            break
+
+        parts = block_input.split()
+        days_part = parts[0]
+        time_part = parts[1]
+
+        start_str, end_str = time_part.split('-')
+
+        start_mins = time_toMinutes(start_str)
+        end_mins = time_toMinutes(end_str)
+
+        blocked_times.append({
+            "days": days_part,
+            "start": start_mins,
+            "end": end_mins
+        })
+
+
     # Filter sections based on allowed days
     filtered_courses_to_sections = {}
     for course_code, sections in courses_to_sections.items():
         allowed_sections = [
             sec for sec in sections
             if days_ofClass(sec, allowed_days_set)
+                and not conflicts_with_blocked_times(sec, blocked_times)
         ]
         if allowed_sections:
             filtered_courses_to_sections[course_code] = allowed_sections
@@ -92,8 +120,9 @@ def main():
     print("Showing first valid combinations found:\n")
 
     for rank, schedule in enumerate(top_schedules, start=1):
-        print_schedule(schedule, rank)
+        print_schedule(schedule, rank,)
 
 
 if __name__ == "__main__":
     main()
+    

@@ -26,7 +26,6 @@ def daily_gap_minutes(sections):
 
 def score_schedule(schedule):
     # Higher score (0-100) = better schedule with smaller gaps between classes.
-
     # Group classes by day
     classes_by_day = defaultdict(list)
     for sec in schedule:

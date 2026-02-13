@@ -50,3 +50,37 @@ def conflicts_with_schedule(schedule, new_sec):
         if sections_overlap(sec, new_sec):
             return True
     return False
+
+# Check if a section conflicts with user's blocked time intervals
+def conflicts_with_blocked_times(section, blocked_times):
+    """
+    For example: 
+    blocked_times:
+        [
+            {"days": "MW", "start": 540, "end": 720},  # -> Monday/Wednesdays 9am-12pm will be blocked
+            {"days": "F", "start": 780, "end": 1020},  # -> Friday 1pm-5pm will be blocked
+        ]
+    """
+    if not blocked_times:
+        return False
+    
+    section_days = make_daysList(section["days"])
+    
+    for block in blocked_times:
+        block_days = make_daysList(block["days"])
+        
+        # Check if they share any day
+        share_day = False
+        for d in section_days:
+            if d in block_days:
+                share_day = True
+                break
+        
+        if not share_day:
+            continue
+        
+        # Check time overlap on shared days
+        if (section["start"] < block["end"]) and (block["start"] < section["end"]):
+            return True
+    
+    return False

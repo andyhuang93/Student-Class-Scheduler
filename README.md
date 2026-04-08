@@ -13,9 +13,10 @@ Students might often resort to a schedule that "works" but might not be ideal or
 - Can run on command-line or a interactive web app interface (streamlit)
 
 ## How to use: 
--  You enter the classes you want to take for the upcoming semester.
--  Select the days you prefer to take classes on
--  (Optional) - Enter any time/class periods with their respective days that you want to avoid
+- Run in terminal 'streamlit run app.py' to open the interactive browser
+-  You can then enter the classes you want to take for the upcoming semester,
+-  Select the days you prefer to take classes on,
+-  (Optional) - Enter any time/class periods with their respective days that you want to avoid,
 -  Click generate schedules to view results with the highest scores displayed first
 
 ## Screenshots
